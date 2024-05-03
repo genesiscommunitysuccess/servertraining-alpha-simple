@@ -54,6 +54,9 @@ dataServer {
             join{ userName, row ->
                 FavouriteTrade.ByUserTradeId(userName, row.tradeId)
             }
+            fields{
+                FAVOURITE_TRADE.IS_FAVOURITE
+            }
         }
     }
 }
