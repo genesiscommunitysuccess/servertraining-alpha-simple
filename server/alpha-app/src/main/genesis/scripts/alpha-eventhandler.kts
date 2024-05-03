@@ -111,6 +111,38 @@ eventHandler {
         }
     }
 
+    eventHandler<Operations>(name = "OPERATIONS_INSERT") {
+        schemaValidation = false
+        onCommit {
+
+            //get operation
+
+            //val result = entityDb.get(Trade.byId("123"))
+
+            //getAllAsList
+            //val result = entityDb.getAllAsList(Trade.byId("123"),Trade.ById("1234"))
+
+            //getRange
+            val result = entityDb.getRange(Trade.byCurrencyId(1), Trade.byCurrencyId(10)).toList()
+            LOG.info("***************************** RESULT: ${result} ********************************")
+            ack()
+        }
+    }
+
+    eventHandler<TradeStandardization>(transactional = true) {
+        onCommit {
+            val tradesNegativePrices = entityDb.getBulk(TRADE).toList()
+                .filter { it.price < 0 }
+
+            tradesNegativePrices.forEach {
+                it.price = 0.0
+            }
+
+            entityDb.modifyAll(*tradesNegativePrices.toList().toTypedArray())
+            ack()
+        }
+    }
+
     eventHandler<PositionReport>(name = "POSITION_REPORT") {
         onCommit {
             val mapper = GenesisJacksonMapper.csvWriter<TradeView>()
