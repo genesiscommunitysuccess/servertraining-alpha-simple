@@ -16,6 +16,7 @@ import global.genesis.commons.standards.GenesisPaths
 import genesis.global.message.event.*
 import genesis.global.eventhandler.validate.*
 import genesis.global.eventhandler.commit.*
+import global.genesis.message.core.event.ApprovalType
 
 eventHandler {
 
@@ -243,5 +244,58 @@ eventHandler {
         }
     }
 
+    eventHandler<Company> (name = "COMPANY_INSERT", transactional = true){
+        onException{ _ , throwable ->
+            nack("ERROR: ${throwable.message}")
+        }
+
+        requiresPendingApproval { event ->
+            event.approvalMessage = "My custom approval message"
+            event.userName != "system.user"
+        }
+
+        onValidate {
+            val company = it.details
+
+            val pendingApprovals = entityDb.getBulk(APPROVAL)
+                .filter { it.approvalStatus == ApprovalStatus.PENDING }.toList()
+
+
+            pendingApprovals.forEach {
+                val companyId = it.eventMessage
+                    .split("\",\"")
+                    .find{ it.contains("COMPANY_ID")}
+                    ?.split(":")
+                    ?.get(2)
+                    ?.removePrefix("\"")
+                LOG.info(companyId)
+                if (companyId == company.companyId){
+                    throw NoSuchElementException ("Company insert for ${company.companyId} has already been sent for approval, choose another company ID")
+                }
+            }
+
+
+            approvableAck(
+                entityDetails = listOf(
+                    ApprovalEntityDetails(
+                        entityTable = "COMPANY",
+                        entityId = company.companyId,
+                        approvalType = ApprovalType.NEW,
+                    )
+                ),
+                approvalMessage = "Company insert for ${company.companyId} has been sent for approval",
+                approvalType = ApprovalType.NEW,
+                additionalDetails = "Custom additional details"
+            )
+        }
+
+        onCommit {
+
+            val company = it.details
+            entityDb.insert(company)
+            LOG.info("Company insert for ${company.companyId} successfully")
+            ack()
+        }
+    }
 
 }
