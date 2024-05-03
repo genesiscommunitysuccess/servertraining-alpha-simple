@@ -1,0 +1,8 @@
+<configuration>
+    <service host="localhost" name="ALPHA_DATASERVER" port="11000"/>
+    <service host="localhost" name="ALPHA_EVENT_HANDLER" port="11001"/>
+    <service host="localhost" name="ALPHA_CONSOLIDATOR" port="11002"/>
+    <service host="localhost" name="ALPHA_EVALUATOR" port="11003"/>
+    <service host="localhost" name="ALPHA_REQUEST_SERVER" port="11004"/>
+    <service host="localhost" name="ALPHA_DATAPIPELINE" port="11005"/>
+</configuration>
