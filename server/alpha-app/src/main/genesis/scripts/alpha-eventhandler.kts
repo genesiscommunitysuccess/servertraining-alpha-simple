@@ -72,11 +72,21 @@ eventHandler {
         }
     }
 
-    eventHandler<Counterparty>(name = "COUNTERPARTY_INSERT") {
+    eventHandler<Counterparty, CustomCounterpartyEventReply>(name="COUNTERPARTY_INSERT", transactional = true){
         schemaValidation = false
-        onCommit { event ->
-            entityDb.insert(event.details)
-            ack()
+
+        onException{ _ , throwable ->
+            CustomCounterpartyEventReply.CounterpartyNack("ERROR: ${throwable.message}")
+        }
+        onValidate {
+            require(!it.details.counterpartyId.contains("1234")){
+                "COUNTERPARTY_ID cannot contain 1234"
+            }
+            CustomCounterpartyEventReply.ValidationCounterpartyAck()
+        }
+        onCommit {
+            entityDb.insert(it.details)
+            CustomCounterpartyEventReply.CounterpartyAck("Counterparty successfully inserted: ${it.details.counterpartyId}")
         }
     }
 
@@ -115,11 +125,22 @@ eventHandler {
         }
     }
 
-    eventHandler<Instrument>(name = "INSTRUMENT_INSERT") {
+    eventHandler<Instrument, CustomInstrumentEventReply>(name="INSTRUMENT_INSERT", transactional = true){
         schemaValidation = false
-        onCommit { event ->
-            entityDb.insert(event.details)
-            ack()
+
+        onException{ _ , throwable ->
+            CustomInstrumentEventReply.InstrumentNack("ERROR: ${throwable.message}")
+        }
+
+        onValidate {
+            require(!it.details.instrumentId.contains("1234")){
+                "INSTRUMENT_ID cannot contain 1234"
+            }
+            CustomInstrumentEventReply.ValidationInstrumentAck()
+        }
+        onCommit {
+            entityDb.insert(it.details)
+            CustomInstrumentEventReply.InstrumentAck("Instrument successfully inserted: ${it.details.instrumentId}")
         }
     }
 
