@@ -221,5 +221,27 @@ eventHandler {
         }
     }
 
+    contextEventHandler<Counterparty, List<Trade>>(name = "COUNTERPARTY_DELETE_CASCADE", transactional = true){
+        onException{ _ , throwable ->
+            nack("ERROR: ${throwable.message}")
+        }
+
+        onValidate{ event ->
+            val trades = ValidateCounterparty.validateCascadeDelete(event, entityDb)
+            validationResult(ack(),trades)
+        }
+
+        onCommit{ event, trades ->
+            if(trades != null){
+                for (trade in trades){
+                    LOG.info("Deleting trade ${trade.tradeId}")
+                    entityDb.delete(Trade.byId(trade.tradeId))
+                }
+            }
+            entityDb.delete(event.details)
+            ack()
+        }
+    }
+
 
 }
