@@ -49,4 +49,7 @@ fields {
     field("COMPANY_LEI", type = STRING)
     field("COMPANY_CEO", type = STRING)
     field(name = "COMPANY_STATUS", type = ENUM("NEW", "OPENED", "CLOSED", default = "NEW"))
+    field("IS_FAVOURITE", type = BOOLEAN)
+    field("USER", type = STRING)
+    field("FAVOURITE_TRADE_ID", type= STRING)
 }

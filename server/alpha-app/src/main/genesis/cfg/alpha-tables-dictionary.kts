@@ -122,4 +122,21 @@ tables {
             }
         }
     }
+
+    table(name = "FAVOURITE_TRADE", id = 2011){
+        sequence(FAVOURITE_TRADE_ID, "FT")
+        TRADE_ID
+        USER
+        IS_FAVOURITE
+
+        primaryKey {
+            FAVOURITE_TRADE_ID
+        }
+        indices{
+            unique {
+                USER
+                TRADE_ID
+            }
+        }
+    }
 }
