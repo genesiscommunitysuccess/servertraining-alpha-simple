@@ -36,6 +36,18 @@ eventHandler {
         }
     }
 
+    eventHandler<Trade>(name="TRADE_UPSERT"){
+        schemaValidation = false
+        onValidate {
+            ValidateTrade.validateUpsert(it,entityDb)
+            ack()
+        }
+        onCommit {
+            CommitTrade.upsert(it,entityDb)
+            ack()
+        }
+    }
+
     eventHandler<Trade>(name = "TRADE_MODIFY", transactional = true) {
         onValidate { event ->
             val message = event.details
@@ -76,8 +88,29 @@ eventHandler {
     }
 
     eventHandler<Counterparty>(name = "COUNTERPARTY_DELETE") {
+        onValidate{
+            ValidateCounterparty.validateDelete(it, entityDb)
+            ack()
+        }
         onCommit { event ->
             entityDb.delete(event.details)
+            ack()
+        }
+    }
+
+    eventHandler<Counterparty>(name="COUNTERPARTY_UPSERT"){
+        schemaValidation = false
+
+        onCommit {
+            CommitCounterparty.upsert(it,entityDb)
+            ack()
+        }
+    }
+
+    eventHandler<Instrument>(name="INSTRUMENT_UPSERT"){
+        schemaValidation = false
+        onCommit {
+            CommitInstrument.upsert(it,entityDb)
             ack()
         }
     }
@@ -98,6 +131,10 @@ eventHandler {
     }
 
     eventHandler<Instrument>(name = "INSTRUMENT_DELETE") {
+        onValidate{
+            ValidateInstrument.validateDelete(it, entityDb)
+            ack()
+        }
         onCommit { event ->
             entityDb.delete(event.details)
             ack()
