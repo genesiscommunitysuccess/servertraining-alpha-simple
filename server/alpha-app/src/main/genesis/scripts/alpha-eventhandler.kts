@@ -8,38 +8,31 @@
  *
  * Modification History
  */
-import genesis.global.message.event.*
+
 import global.genesis.jackson.core.GenesisJacksonMapper
 import java.io.File
 import java.time.LocalDate
 import global.genesis.commons.standards.GenesisPaths
-
+import genesis.global.message.event.*
+import genesis.global.eventhandler.validate.*
+import genesis.global.eventhandler.commit.*
 
 eventHandler {
 
-    eventHandler<Trade>(name = "TRADE_INSERT") {
-        schemaValidation = false
+    eventHandler<Trade, CustomTradeEventReply>(name = "TRADE_INSERT") {
 
-        onValidate { event ->
-            val message = event.details
-            verify {
-                entityDb hasEntry Counterparty.byId(message.counterpartyId.toString())
-                entityDb hasEntry Instrument.byId(message.instrumentId.toString())
-            }
-            ack()
+        onException{ event, throwable ->
+            CustomTradeEventReply.TradeNck("ERROR: ${throwable.message}")
         }
 
+        onValidate { event ->
+            ValidateTrade.validateInsert(event,entityDb)
+            CustomTradeEventReply.ValidationTradeAck()
+        }
         onCommit { event ->
-            val trade = event.details
+            CommitTrade.insert(event, entityDb)
+            CustomTradeEventReply.TradeAck("TRADE_INSERT_ACK")
 
-            if (trade.quantity!! > 0) {
-                trade.enteredBy = event.userName
-                entityDb.insert(trade)
-                ack()
-            }
-            else {
-                nack("Quantity must be positive")
-            }
         }
     }
 
@@ -125,6 +118,13 @@ eventHandler {
             //getRange
             val result = entityDb.getRange(Trade.byCurrencyId(1), Trade.byCurrencyId(10)).toList()
             LOG.info("***************************** RESULT: ${result} ********************************")
+            ack()
+        }
+    }
+
+    eventHandler<TrainingClass>(name = "TEST"){
+        schemaValidation = false
+        onCommit{
             ack()
         }
     }

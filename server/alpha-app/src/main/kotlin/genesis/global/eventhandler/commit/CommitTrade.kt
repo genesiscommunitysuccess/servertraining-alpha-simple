@@ -23,5 +23,12 @@ class CommitTrade {
             }
         }
 
+        suspend fun insert(
+            event: Event<Trade>,
+            entityDb: AsyncMultiEntityReadWriteGenericSupport
+        ){
+            entityDb.insert(event.details)
+        }
+
     }
 }
