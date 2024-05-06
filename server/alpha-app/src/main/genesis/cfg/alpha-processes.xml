@@ -79,4 +79,15 @@
         <script>alpha-streamer-client.kts</script>
         <language>pal</language>
     </process>
+    <process name="ALPHA_CAMEL">
+        <groupId>ALPHA</groupId>
+        <start>true</start>
+        <options>-Xmx512m -DRedirectStreamsToLog=true -DXSD_VALIDATE=false</options>
+        <module>genesis-pal-camel</module>
+        <package>global.genesis.camel.pal</package>
+        <script>alpha-camel.kts</script>
+        <description>Alpha Camel integrations</description>
+        <classpath>alpha-app*</classpath>
+        <language>pal</language>
+    </process>
 </processes>

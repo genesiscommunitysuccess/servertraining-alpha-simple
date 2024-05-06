@@ -7,4 +7,5 @@
     <service host="localhost" name="ALPHA_DATAPIPELINE" port="11005"/>
     <service host="localhost" name="ALPHA_STREAMER" port="11006"/>
     <service host="localhost" name="ALPHA_STREAMER_CLIENT" port="11007"/>
+    <service host="localhost" name="ALPHA_CAMEL" port="11008"/>
 </configuration>

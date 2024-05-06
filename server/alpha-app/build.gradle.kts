@@ -7,6 +7,8 @@ dependencies {
     testImplementation("global.genesis:genesis-dataserver2")
     testImplementation("global.genesis:genesis-pal-dataserver")
     testImplementation("global.genesis:genesis-pal-eventhandler")
+    api("org.apache.camel:camel-ftp")
+    api("org.apache.camel:camel-core")
 }
 
 description = "alpha-app"
