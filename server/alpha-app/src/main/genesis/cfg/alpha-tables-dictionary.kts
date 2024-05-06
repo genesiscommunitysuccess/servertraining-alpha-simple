@@ -11,7 +11,7 @@
 
 tables {
 
-    table (name = "TRADE", id = 2000, audit = details(id = 2100, sequence = "TR")) {
+    table (name = "TRADE", id = 2000, audit = details(id = 2100, sequence = "TR", tsKey = true)) {
         sequence(TRADE_ID, "TR")
         COUNTERPARTY_ID not null
         INSTRUMENT_ID not null
@@ -23,6 +23,7 @@ tables {
         ENTERED_BY
         TRADE_STATUS
         CURRENCY_ID
+        BEEN_AUDITED
 
         primaryKey {
             TRADE_ID

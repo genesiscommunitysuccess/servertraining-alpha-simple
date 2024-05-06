@@ -63,4 +63,20 @@
         <language>pal</language>
         <loggingLevel>DEBUG</loggingLevel>
     </process>
+    <process name="ALPHA_STREAMER">
+        <start>true</start>
+        <options>-Xmx256m -DXSD_VALIDATE=false</options>
+        <module>genesis-pal-streamer</module>
+        <package>global.genesis.streamer.pal</package>
+        <script>alpha-streamer.kts</script>
+        <language>pal</language>
+    </process>
+    <process name="ALPHA_STREAMER_CLIENT">
+        <start>true</start>
+        <options>-Xmx512m -DXSD_VALIDATE=false</options>
+        <module>genesis-pal-streamerclient</module>
+        <package>global.genesis.streamerclient.pal</package>
+        <script>alpha-streamer-client.kts</script>
+        <language>pal</language>
+    </process>
 </processes>
