@@ -40,4 +40,21 @@ webHandlers("BASE-PATH"){
         }
     }
 
+    endpoint(POST,"DELETE_FILE"){
+        val fileUploadFolder = "training/files"
+        val savedFolder = Paths.get(GenesisPaths.runtime() + "/" + fileUploadFolder)
+        val fileName by queryParameter("name")
+
+        handleRequest {
+            val file = File("$savedFolder/${fileName}")
+            require(file.exists()) { "File: $fileName not found" }
+            file.delete()
+        }
+
+        exceptionHandler<IllegalArgumentException>(HttpStatusCode.NotFound){
+            exception.message ?: "Error"
+        }
+
+    }
+
 }
