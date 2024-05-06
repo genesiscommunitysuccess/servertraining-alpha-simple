@@ -244,7 +244,7 @@ eventHandler {
         }
     }
 
-    eventHandler<Company> (name = "COMPANY_INSERT", transactional = true){
+    eventHandler<Company> (name = "COMPANY_INSERT"){
         onException{ _ , throwable ->
             nack("ERROR: ${throwable.message}")
         }
@@ -260,20 +260,7 @@ eventHandler {
             val pendingApprovals = entityDb.getBulk(APPROVAL)
                 .filter { it.approvalStatus == ApprovalStatus.PENDING }.toList()
 
-
-            pendingApprovals.forEach {
-                val companyId = it.eventMessage
-                    .split("\",\"")
-                    .find{ it.contains("COMPANY_ID")}
-                    ?.split(":")
-                    ?.get(2)
-                    ?.removePrefix("\"")
-                LOG.info(companyId)
-                if (companyId == company.companyId){
-                    throw NoSuchElementException ("Company insert for ${company.companyId} has already been sent for approval, choose another company ID")
-                }
-            }
-
+            LOG.info(pendingApprovals.toString())
 
             approvableAck(
                 entityDetails = listOf(
