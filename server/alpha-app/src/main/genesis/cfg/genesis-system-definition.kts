@@ -3,7 +3,7 @@ systemDefinition {
         item(name = "DbLayer", value = "SQL")
         item(name = "SqlEnableSequenceGeneration", value = true)
         item(name = "DictionarySource", value = "DB")
-        item(name = "DbHost", value = "jdbc:h2:file:~/servertraining-alpha-simple/server/h2/test;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE,KEY;AUTO_SERVER=TRUE")
+        item(name = "DbHost", value = "jdbc:h2:file:~/servertraining-alpha/server/h2/test;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE,KEY;AUTO_SERVER=TRUE")
         item(name = "DbQuotedIdentifiers", value = true)
         item(name = "DEPLOYED_PRODUCT", value = "alpha")
         item(name = "MqLayer", value = env["MQ_LAYER", "ZeroMQ"])
@@ -25,6 +25,7 @@ systemDefinition {
         item(name = "MetadataChronicleMapEntriesCount", value = "512")
         item(name = "DaemonServerPort", value = "4568")
         item(name = "DaemonHealthPort", value = "4569")
+        item(name = "PrimaryIfSingleNode", value = "true")
         item(
             name = "JVM_OPTIONS",
             value = "-XX:MaxHeapFreeRatio=70 -XX:MinHeapFreeRatio=30 -XX:+UseG1GC -XX:+UseStringDeduplication -XX:OnOutOfMemoryError=\"handleOutOfMemoryError.sh %p\""

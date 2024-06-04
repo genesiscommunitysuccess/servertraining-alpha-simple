@@ -1,8 +1,10 @@
 import global.genesis.gen.config.tables.POSITION.NOTIONAL
-import global.genesis.gen.config.tables.POSITION.QUANTITY
+
 import global.genesis.gen.config.tables.POSITION.VALUE
+import global.genesis.gen.config.tables.POSITION.QUANTITY
 import global.genesis.gen.dao.Position
-import global.genesis.gen.dao.enums.Direction
+import global.genesis.gen.dao.enums.alpha.trade.Direction
+import global.genesis.gen.dao.enums.alpha.trade.*
 
 consolidators {
     config {}

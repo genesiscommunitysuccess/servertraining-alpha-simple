@@ -285,7 +285,7 @@ eventHandler {
         }
     }
 
-    eventHandler<TradeAudit>(name = "TRADE_AUDIT_STREAM"){
+    eventHandler<Trade>(name = "TRADE_AUDIT_STREAM"){
         schemaValidation = false
         onCommit{ event ->
             val message = event.details
@@ -293,6 +293,7 @@ eventHandler {
                message.beenAudited = true
                 entityDb.modify(message)
                 LOG.info("Trade_ID: ${message.tradeId} validated")
+                LOG.info("Trade_AUDIT_STREAM: ${message.beenAudited}")
             }else {
                 LOG.info("Trade_ID: ${message.tradeId} already validated")
             }
