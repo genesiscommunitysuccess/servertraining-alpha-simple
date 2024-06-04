@@ -25,6 +25,7 @@ systemDefinition {
         item(name = "MetadataChronicleMapEntriesCount", value = "512")
         item(name = "DaemonServerPort", value = "4568")
         item(name = "DaemonHealthPort", value = "4569")
+        item(name = "PrimaryIfSingleNode", value = "true")
         item(
             name = "JVM_OPTIONS",
             value = "-XX:MaxHeapFreeRatio=70 -XX:MinHeapFreeRatio=30 -XX:+UseG1GC -XX:+UseStringDeduplication -XX:OnOutOfMemoryError=\"handleOutOfMemoryError.sh %p\""

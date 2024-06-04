@@ -13,7 +13,7 @@ class ValidateTrade {
             event: Event<Trade>,
             entityDb: AsyncMultiEntityReadWriteGenericSupport
         ){
-            val counterpartyId = event.details.counterpartyId!!
+            val counterpartyId = event.details.counterpartyId
             val instrumentId = event.details.instrumentId
 
             val counterparty = entityDb.get(Counterparty.byId(counterpartyId))
@@ -28,7 +28,7 @@ class ValidateTrade {
             entityDb: AsyncMultiEntityReadWriteGenericSupport
         ) {
             val tradeId = event.details.tradeId
-            val counterpartyId = event.details.counterpartyId!!
+            val counterpartyId = event.details.counterpartyId
             val instrumentId = event.details.instrumentId
 
             val trade = entityDb.get(Trade.byId(tradeId))
